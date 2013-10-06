@@ -5,8 +5,8 @@
 #include <limits>
 #include <iostream>
 #include "unequal_dimensions_exception.h"
-#include "dimension_to_low_exception.h"
-#include "dimension_to_high_exception.h"
+#include "dimension_too_low_exception.h"
+#include "dimension_too_high_exception.h"
 template<class T>
 class lin_vector{
 	public:
@@ -23,6 +23,7 @@ class lin_vector{
 		T& operator[](int index);
 		const T& operator[](int index) const;
 		T* data();
+		void push_back(const T&);
 		const T* data() const;
 		unsigned int dim() const;
 	       	unsigned int size() const;	
@@ -37,15 +38,15 @@ class lin_vector{
 		lin_vector<T> operator * (const T&) const;
 		lin_vector<T>& operator /= (const T&);
 		lin_vector<T> operator / (const T&) const;
-		int dot_product(const lin_vector<T>&) const;
+		double dot_product(const lin_vector<T>&) const;
 		lin_vector<T> cross_product(const lin_vector<T>&) const;
-
+		// TODO: check to see if I can handle complex numbers.
+		lin_vector<double> unit_vector();
+		
 	private:
 		/* Data storage */
 		std::vector<T> _data;
 
-		/* Private helper function for norms will change vector called on */
-		void abs();
 };
 
 /* Constructors */
@@ -119,6 +120,11 @@ template <class T>
 const T* lin_vector<T>::data() const
 {
 	return this->_data.data();
+}
+template <class T>
+void lin_vector<T>::push_back(const T& a)
+{
+	this->_data.push_back(a);
 }
 template <class T>
 unsigned int lin_vector<T>::dim() const
@@ -245,9 +251,9 @@ lin_vector<T> lin_vector<T>::operator/(const T& a) const
 	return b /= a;
 }
 template <class T>
-int lin_vector<T>::dot_product(const lin_vector<T>& a) const
+double lin_vector<T>::dot_product(const lin_vector<T>& a) const
 {
-	int sum = 0;
+	double sum = 0.0;
 	if (this->dim() == 0)
 	{
 		throw dimension_to_low_exception();
@@ -286,17 +292,16 @@ lin_vector<T> lin_vector<T>::cross_product(const lin_vector<T>& a) const
 		return a;
 	}
 }
-
-/* Private helper functions, will change the vector */
 template <class T>
-void lin_vector<T>::abs()
+lin_vector<double> lin_vector<T>::unit_vector()
 {
+	lin_vector<double> a;
 	for (unsigned int i = 0; i < this->dim(); ++i)
 	{
-		if (this->at(i) < 0)
-		{
-			this->at(i) *= -1;
-		}
+		a.push_back((double) this->at(i));
 	}
+	a /= this->norm(2);
+	return a;
 }
+
 #endif
