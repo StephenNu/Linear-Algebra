@@ -11,10 +11,8 @@ template<class T>
 class lin_vector{
 	public:
 		/* Constructors */
-		lin_vector();
-		lin_vector(std::vector<T>&);
+		lin_vector() = default;
 		lin_vector(const std::vector<T>&);
-		lin_vector(lin_vector<T>&);
 		lin_vector(const lin_vector<T>&);
 
 		/* Accessors */
@@ -56,42 +54,14 @@ class lin_vector{
 
 /* Constructors */
 template <class T>
-lin_vector<T>::lin_vector()
-{
-}
-
-template <class T>
-lin_vector<T>::lin_vector(std::vector<T>& input)
-{
-	for (unsigned int i = 0; i < input.size(); ++i)
-	{
-		this->_data.push_back(input.at(i));
-	}
-}
-
-template <class T>
 lin_vector<T>::lin_vector(const std::vector<T>& input)
+	: _data(input)
 {
-	for (unsigned int i = 0; i < input.size(); ++i)
-	{
-		this->_data.push_back(input.at(i));
-	}
-}
-template <class T>
-lin_vector<T>::lin_vector(lin_vector<T>& input)
-{
-	for (unsigned int i = 0; i < input.dim(); ++i)
-	{
-		this->_data.push_back(input.at(i));
-	}
 }
 template <class T>
 lin_vector<T>::lin_vector(const lin_vector<T>& input)
+	: _data(input._data)
 {
-	for (unsigned int i = 0; i < input.dim(); ++i)
-	{
-		this->_data.push_back(input.at(i));
-	}
 }
 
 /* Accessors */
@@ -149,12 +119,12 @@ double lin_vector<T>::norm(const unsigned int norm_power) const
 	{
 		if (!this->empty())
 		{			
-			norm = this->at(0);
+			norm = (*this)[0];
 		}
 		for (unsigned int i = 1; i < this->dim(); ++i)
 		{
 			// TODO: std::max_element once iterators are defined.
-			norm = std::max(this->at(i), norm);
+			norm = std::max((*this)[i], norm);
 		}
 		return norm;
 	}
@@ -162,14 +132,14 @@ double lin_vector<T>::norm(const unsigned int norm_power) const
 	{
 		for (unsigned int i = 0; i < this->dim(); ++i)
 		{
-			norm += pow(std::abs(this->at(i)),(T)norm_power);
+			norm += pow(std::abs((*this)[i]),(T)norm_power);
 		}
 	}
 	else
 	{
 		for (unsigned int i = 0; i < this->dim(); ++i)
 		{
-			norm += pow(this->at(i), (T)norm_power);
+			norm += pow((*this)[i], (T)norm_power);
 		}
 	}
 	return pow(norm, 1.0/norm_power);	
@@ -188,7 +158,7 @@ lin_vector<T>& lin_vector<T>::operator+=(const lin_vector<T>& a)
 	{
 		for (unsigned int i = 0; i < this->dim(); ++i)
 		{
-			this->at(i) += a.at(i);
+			(*this)[i] += a[i];
 		}
 		return *this;
 	}
@@ -210,7 +180,7 @@ lin_vector<T>& lin_vector<T>::operator-=(const lin_vector<T>& a)
 	{
 		for (unsigned int i = 0; i < this->dim(); ++i)
 		{
-			this->at(i) -= a.at(i);
+			(*this)[i] -= a[i];
 		}
 		return *this;
 	}
@@ -230,7 +200,7 @@ lin_vector<T>& lin_vector<T>::operator*=(const T& a)
 {
 	for (unsigned int i = 0; i < this->dim(); ++i)
 	{
-		this->at(i) *= a;
+		(*this)[i] *= a;
 	}
 	return *this;
 }
@@ -245,7 +215,7 @@ lin_vector<T>& lin_vector<T>::operator/=(const T& a)
 {
 	for (unsigned int i = 0; i < this->dim(); ++i)
 	{
-		this->at(i) /= a;
+		(*this)[i] /= a;
 	}
 	return *this;
 }
@@ -267,7 +237,7 @@ double lin_vector<T>::dot_product(const lin_vector<T>& a) const
 	{
 		for (unsigned int i = 0; i < this->dim(); ++i)
 		{
-			sum += this->at(i) * ((a.at(i)));
+			sum += (*this)[i] * a[i];
 		}
 		return sum;
 	}
@@ -287,11 +257,11 @@ lin_vector<T> lin_vector<T>::cross_product(const lin_vector<T>& a) const
 	}
 	else
 	{
-		s1 = this->at(1)*a.at(2) - this->at(2)*a.at(1);
+		s1 = (*this)[1]*a[2] - (*this)[2]*a[1];
 		x.push_back(s1);
-		s2 = this->at(2)*a.at(0) - this->at(0)*a.at(2);
+		s2 = (*this)[2]*a[0] - (*this)[0]*a[2];
 		x.push_back(s2);
-		s3 = this->at(0)*a.at(1) - this->at(1)*a.at(0);
+		s3 = (*this)[0]*a[1] - (*this)[1]*a[0];
 		x.push_back(s3);
 		lin_vector<T> a(x);
 		return a;
@@ -320,7 +290,7 @@ lin_vector<double> lin_vector<T>::to_double() const
 	lin_vector<double> a;
 	for (unsigned int i = 0; i < this->dim(); ++i)
 	{
-		a.push_back((double)this->at(i));
+		a.push_back((double)(*this)[i]);
 	}
 	return a;
 }
