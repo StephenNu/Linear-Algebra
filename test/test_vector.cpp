@@ -78,4 +78,12 @@ int main()
 	lin_vector<double> unit = x.unit_vector();
 	printv<double>("(unit_vector) 0.267261 0.534522 0.801784", unit);
 	printn<double>("(unit_vector) 1", unit.dot_product(unit));
+
+	/* Test projection */
+	std::vector<int> e;
+	e.push_back(1);
+	e.push_back(1);
+	e.push_back(1);
+	lin_vector<int> a(e);
+	printv("(projection) 2 2 2", a.projection(x));
 }

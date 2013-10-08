@@ -40,9 +40,14 @@ class lin_vector{
 		lin_vector<T> operator / (const T&) const;
 		double dot_product(const lin_vector<T>&) const;
 		lin_vector<T> cross_product(const lin_vector<T>&) const;
+		lin_vector<double> projection(const lin_vector<T>&) const;
 		// TODO: check to see if I can handle complex numbers.
-		lin_vector<double> unit_vector();
+		lin_vector<double> unit_vector() const;
 		
+		/* Type changing functions */
+		// TODO: add other types.
+		lin_vector<double> to_double() const;	
+	
 	private:
 		/* Data storage */
 		std::vector<T> _data;
@@ -292,16 +297,31 @@ lin_vector<T> lin_vector<T>::cross_product(const lin_vector<T>& a) const
 		return a;
 	}
 }
+// Reminder this is a projection of b onto the direction of a (this vector).
 template <class T>
-lin_vector<double> lin_vector<T>::unit_vector()
+lin_vector<double> lin_vector<T>::projection(const lin_vector<T>& b) const
 {
+	lin_vector<double> a_unit(this->unit_vector());
+	double scalar = b.to_double().dot_product(a_unit);
+	return a_unit *= scalar;
+}
+template <class T>
+lin_vector<double> lin_vector<T>::unit_vector() const
+{
+	lin_vector<double> a = this->to_double();
+	return a /= this->norm(2);
+}
+
+
+/* Type changing functions */
+template <class T>
+lin_vector<double> lin_vector<T>::to_double() const
+{	
 	lin_vector<double> a;
 	for (unsigned int i = 0; i < this->dim(); ++i)
 	{
-		a.push_back((double) this->at(i));
+		a.push_back((double)this->at(i));
 	}
-	a /= this->norm(2);
 	return a;
 }
-
 #endif
