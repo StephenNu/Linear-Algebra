@@ -7,13 +7,21 @@
 #include "unequal_dimensions_exception.h"
 #include "dimension_too_low_exception.h"
 #include "dimension_too_high_exception.h"
-template<class T>
+template<class T, class A = std::allocator<T> >
 class lin_vector{
 	public:
+		/* Container values */
+		typedef A allocator_type;
+		typedef typename A::value_type value_type; 
+		typedef typename A::reference reference;
+		typedef typename A::const_reference const_reference;
+		typedef typename A::difference_type difference_type;
+		typedef typename A::size_type size_type;
+		
 		/* Constructors */
 		lin_vector() = default;
 		lin_vector(const std::vector<T>&);
-		lin_vector(const lin_vector<T>&);
+		lin_vector(const lin_vector<T,A>&);
 
 		/* Accessors */
 		T& at(const int);
@@ -28,17 +36,17 @@ class lin_vector{
 		double norm(const unsigned int) const;
 		bool empty() const;
 		/* Operators */
-		lin_vector<T>& operator += (const lin_vector<T>&);
-		lin_vector<T> operator + (const lin_vector<T>&) const;
-		lin_vector<T>& operator -= (const lin_vector<T>&);
-		lin_vector<T> operator - (const lin_vector<T>&) const;
-		lin_vector<T>& operator *= (const T&);
-		lin_vector<T> operator * (const T&) const;
-		lin_vector<T>& operator /= (const T&);
-		lin_vector<T> operator / (const T&) const;
-		double dot_product(const lin_vector<T>&) const;
-		lin_vector<T> cross_product(const lin_vector<T>&) const;
-		lin_vector<double> projection(const lin_vector<T>&) const;
+		lin_vector<T,A>& operator += (const lin_vector<T,A>&);
+		lin_vector<T,A> operator + (const lin_vector<T,A>&) const;
+		lin_vector<T,A>& operator -= (const lin_vector<T,A>&);
+		lin_vector<T,A> operator - (const lin_vector<T,A>&) const;
+		lin_vector<T,A>& operator *= (const T&);
+		lin_vector<T,A> operator * (const T&) const;
+		lin_vector<T,A>& operator /= (const T&);
+		lin_vector<T,A> operator / (const T&) const;
+		double dot_product(const lin_vector<T,A>&) const;
+		lin_vector<T,A> cross_product(const lin_vector<T,A>&) const;
+		lin_vector<double> projection(const lin_vector<T,A>&) const;
 		// TODO: check to see if I can handle complex numbers.
 		lin_vector<double> unit_vector() const;
 		
@@ -53,66 +61,66 @@ class lin_vector{
 };
 
 /* Constructors */
-template <class T>
-lin_vector<T>::lin_vector(const std::vector<T>& input)
+template <class T, class A>
+lin_vector<T,A>::lin_vector(const std::vector<T>& input)
 	: _data(input)
 {
 }
-template <class T>
-lin_vector<T>::lin_vector(const lin_vector<T>& input)
+template <class T, class A>
+lin_vector<T,A>::lin_vector(const lin_vector<T,A>& input)
 	: _data(input._data)
 {
 }
 
 /* Accessors */
-template <class T>
-T& lin_vector<T>::at(const int index)
+template <class T, class A>
+T& lin_vector<T,A>::at(const int index)
 {
 	return this->_data.at(index);
 }
 
-template <class T>
-const T& lin_vector<T>::at(const int index) const
+template <class T, class A>
+const T& lin_vector<T,A>::at(const int index) const
 {
 	return this->_data.at(index);
 }
-template <class T>
-T& lin_vector<T>::operator[](int index)
+template <class T, class A>
+T& lin_vector<T,A>::operator[](int index)
 {
 	return this->_data[index];
 }
-template <class T>
-const T& lin_vector<T>::operator[](int index) const
+template <class T, class A>
+const T& lin_vector<T,A>::operator[](int index) const
 {
 	return this->_data[index];
 }
-template <class T>
-T* lin_vector<T>::data()
+template <class T, class A>
+T* lin_vector<T,A>::data()
 {
 	return this->_data.data();
 }
-template <class T>
-const T* lin_vector<T>::data() const
+template <class T, class A>
+const T* lin_vector<T,A>::data() const
 {
 	return this->_data.data();
 }
-template <class T>
-void lin_vector<T>::push_back(const T& a)
+template <class T, class A>
+void lin_vector<T,A>::push_back(const T& a)
 {
 	this->_data.push_back(a);
 }
-template <class T>
-unsigned int lin_vector<T>::dim() const
+template <class T, class A>
+unsigned int lin_vector<T,A>::dim() const
 {
 	return this->_data.size();
 }
-template <class T>
-unsigned int lin_vector<T>::size() const
+template <class T, class A>
+unsigned int lin_vector<T,A>::size() const
 {
 	return this->dim();
 }
-template <class T>
-double lin_vector<T>::norm(const unsigned int norm_power) const
+template <class T, class A>
+double lin_vector<T,A>::norm(const unsigned int norm_power) const
 {
 	T norm = 0;
 	if (norm_power == std::numeric_limits<decltype(norm_power)>::max())
@@ -144,15 +152,15 @@ double lin_vector<T>::norm(const unsigned int norm_power) const
 	}
 	return pow(norm, 1.0/norm_power);	
 }
-template <class T>
-bool lin_vector<T>::empty() const
+template <class T, class A>
+bool lin_vector<T,A>::empty() const
 {
 	return this->dim() == 0;
 }
 
 /* Operators */
-template <class T>
-lin_vector<T>& lin_vector<T>::operator+=(const lin_vector<T>& a)
+template <class T, class A>
+lin_vector<T,A>& lin_vector<T,A>::operator+=(const lin_vector<T,A>& a)
 {
 	if (this->dim() == a.dim())
 	{
@@ -167,14 +175,14 @@ lin_vector<T>& lin_vector<T>::operator+=(const lin_vector<T>& a)
 		throw unequal_dimensions_exception();
 	}
 }
-template <class T>
-lin_vector<T> lin_vector<T>::operator+(const lin_vector<T>& a) const
+template <class T, class A>
+lin_vector<T,A> lin_vector<T,A>::operator+(const lin_vector<T,A>& a) const
 {
-	lin_vector<T> b(*this);
+	lin_vector<T,A> b(*this);
 	return b += a;
 }
-template <class T>
-lin_vector<T>& lin_vector<T>::operator-=(const lin_vector<T>& a)
+template <class T, class A>
+lin_vector<T,A>& lin_vector<T,A>::operator-=(const lin_vector<T,A>& a)
 {
 	if (this->dim() == a.dim())
 	{
@@ -189,14 +197,14 @@ lin_vector<T>& lin_vector<T>::operator-=(const lin_vector<T>& a)
 		throw unequal_dimensions_exception();
 	}
 }
-template <class T>
-lin_vector<T> lin_vector<T>::operator-(const lin_vector<T>& a) const
+template <class T, class A>
+lin_vector<T,A> lin_vector<T,A>::operator-(const lin_vector<T,A>& a) const
 {
-	lin_vector<T> b(*this);
+	lin_vector<T,A> b(*this);
 	return b -= a;
 }
-template <class T>
-lin_vector<T>& lin_vector<T>::operator*=(const T& a)
+template <class T, class A>
+lin_vector<T,A>& lin_vector<T,A>::operator*=(const T& a)
 {
 	for (unsigned int i = 0; i < this->dim(); ++i)
 	{
@@ -204,14 +212,14 @@ lin_vector<T>& lin_vector<T>::operator*=(const T& a)
 	}
 	return *this;
 }
-template <class T>
-lin_vector<T> lin_vector<T>::operator*(const T& a) const
+template <class T, class A>
+lin_vector<T,A> lin_vector<T,A>::operator*(const T& a) const
 {
-	lin_vector<T> b(*this);
+	lin_vector<T,A> b(*this);
 	return b *= a;
 }
-template <class T>
-lin_vector<T>& lin_vector<T>::operator/=(const T& a)
+template <class T, class A>
+lin_vector<T,A>& lin_vector<T,A>::operator/=(const T& a)
 {
 	for (unsigned int i = 0; i < this->dim(); ++i)
 	{
@@ -219,14 +227,14 @@ lin_vector<T>& lin_vector<T>::operator/=(const T& a)
 	}
 	return *this;
 }
-template <class T>
-lin_vector<T> lin_vector<T>::operator/(const T& a) const
+template <class T, class A>
+lin_vector<T,A> lin_vector<T,A>::operator/(const T& a) const
 {
-	lin_vector<T> b(*this);
+	lin_vector<T,A> b(*this);
 	return b /= a;
 }
-template <class T>
-double lin_vector<T>::dot_product(const lin_vector<T>& a) const
+template <class T, class A>
+double lin_vector<T,A>::dot_product(const lin_vector<T,A>& a) const
 {
 	double sum = 0.0;
 	if (this->dim() == 0)
@@ -242,8 +250,8 @@ double lin_vector<T>::dot_product(const lin_vector<T>& a) const
 		return sum;
 	}
 }
-template <class T>
-lin_vector<T> lin_vector<T>::cross_product(const lin_vector<T>& a) const
+template <class T, class A>
+lin_vector<T,A> lin_vector<T,A>::cross_product(const lin_vector<T,A>& a) const
 {
 	int s1, s2, s3;
 	std::vector<T> x;
@@ -263,20 +271,20 @@ lin_vector<T> lin_vector<T>::cross_product(const lin_vector<T>& a) const
 		x.push_back(s2);
 		s3 = (*this)[0]*a[1] - (*this)[1]*a[0];
 		x.push_back(s3);
-		lin_vector<T> a(x);
+		lin_vector<T,A> a(x);
 		return a;
 	}
 }
 // Reminder this is a projection of b onto the direction of a (this vector).
-template <class T>
-lin_vector<double> lin_vector<T>::projection(const lin_vector<T>& b) const
+template <class T, class A>
+lin_vector<double> lin_vector<T,A>::projection(const lin_vector<T,A>& b) const
 {
 	lin_vector<double> a_unit(this->unit_vector());
 	double scalar = b.to_double().dot_product(a_unit);
 	return a_unit *= scalar;
 }
-template <class T>
-lin_vector<double> lin_vector<T>::unit_vector() const
+template <class T, class A>
+lin_vector<double> lin_vector<T,A>::unit_vector() const
 {
 	lin_vector<double> a = this->to_double();
 	return a /= this->norm(2);
@@ -284,8 +292,8 @@ lin_vector<double> lin_vector<T>::unit_vector() const
 
 
 /* Type changing functions */
-template <class T>
-lin_vector<double> lin_vector<T>::to_double() const
+template <class T, class A>
+lin_vector<double> lin_vector<T,A>::to_double() const
 {	
 	lin_vector<double> a;
 	for (unsigned int i = 0; i < this->dim(); ++i)
