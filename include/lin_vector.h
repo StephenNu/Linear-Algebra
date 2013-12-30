@@ -36,6 +36,7 @@ class lin_vector{
 		double norm(const unsigned int) const;
 		bool empty() const;
 		/* Operators */
+		lin_vector<T,A>& operator = (const lin_vector<T,A>&);
 		lin_vector<T,A>& operator += (const lin_vector<T,A>&);
 		lin_vector<T,A> operator + (const lin_vector<T,A>&) const;
 		lin_vector<T,A>& operator -= (const lin_vector<T,A>&);
@@ -159,6 +160,22 @@ bool lin_vector<T,A>::empty() const
 }
 
 /* Operators */
+template <class T, class A>
+lin_vector<T,A>& lin_vector<T,A>::operator=(const lin_vector<T,A>& a)
+{
+	if (this->dim() == a.dim())
+	{
+		for (unsigned int i = 0; i < this->dim(); ++i)
+		{
+			(*this)[i] = a[i];
+		}
+		return *this;
+	}
+	else
+	{
+		throw unequal_dimensions_exception();
+	}
+}
 template <class T, class A>
 lin_vector<T,A>& lin_vector<T,A>::operator+=(const lin_vector<T,A>& a)
 {

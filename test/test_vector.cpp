@@ -42,6 +42,19 @@ int main()
 	lin_vector<int> w(q);
 	printv<int>("1 2 3", w);
 	
+	std::vector<int> p;
+	p.push_back(1);
+	p.push_back(1);
+	p.push_back(1);
+	lin_vector<int> k(p);
+	printv<int>("1 1 1", k);
+
+	/* Test = operator */
+	k = q;
+	printv<int>("1 2 3", k);
+	lin_vector<int> o = k;
+	printv<int>("1 2 3", o);	
+
 	/* Test + and += operator */
 	printv<int>("(+) 2 4 6", x + w);
 	x += w;
