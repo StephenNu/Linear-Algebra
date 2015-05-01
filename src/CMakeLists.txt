@@ -1,21 +1,37 @@
-cmake_minimum_required(VERSION 2.8)
+# My project defintions
 
+add_library(LinearAlgebra SHARED 
+    TestLib.cxx
+    )
 
-add_definitions("--std=c++11 -Wall -Wextra")
-# Added the include directory for header files. -Stephen
-include_directories("../include")
-include_directories("../src")
+# Test my vector implementation
+set(VECTOR_TEST_EXE vector_test)
+set(ALL_TESTS ${ALL_TESTS} ${VECTOR_TEST_EXE})
+add_executable(${VECTOR_TEST_EXE} EXCLUDE_FROM_ALL TestVector.cxx)
+target_link_libraries(${VECTOR_TEST_EXE}
+  LinearAlgebra
+  libgmock
+  libgtest
+  )
+add_test(TestVector ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${VECTOR_TEST_EXE})
 
-project(Linear_algebra_libary)
+# Test my matrix implementation
+set(MATRIX_TEST_EXE matrix_test)
+set(ALL_TESTS ${ALL_TESTS} ${MATRIX_TEST_EXE})
+add_executable(${MATRIX_TEST_EXE} EXCLUDE_FROM_ALL TestMatrix.cxx)
+target_link_libraries(${MATRIX_TEST_EXE}
+  LinearAlgebra
+  libgmock
+  libgtest
+  )
+add_test(TestMatrix ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${MATRIX_TEST_EXE})
 
+# adds target to build and run all tests
+# call with "make check"
+# Warning this will download and install gtest and gmock.
+add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND}
+                      DEPENDS ${ALL_TESTS})
 
-add_executable(
-  bin/test_vector
-  test_vector.cpp
-)
-
-enable_testing()
-
-	add_test( vector_test test_vector )
-#target_link_libraries(
-#)
+FOREACH (TEST_FILE ${ALL_TESTS})
+  install(TARGETS ${TEST_FILE} DESTINATION bin OPTIONAL)
+ENDFOREACH()

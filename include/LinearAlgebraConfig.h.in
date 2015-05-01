@@ -1,0 +1,3 @@
+// the configured options and settings for linear_algebra
+#define linear_algebra_VERSION_MAJOR @linear_algebra_VERSION_MAJOR@
+#define linear_algebra_VERSION_MINOR @linear_algebra_VERSION_MINOR@
