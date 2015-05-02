@@ -1,8 +1,7 @@
 /**
-  \mainpage The mainpage documentation
+  \mainpage Introduction to the Linear Algebra Library
 
-  This is a simple example of a mainpage you can create yourself.
-  Place this inside of a file called `mainpage.dox` and use doxygen.
-  If you specified `INPUT` or `FILE_PATTERNS` in your Doxyfile please
-  add `.dox` to your file patterns or `mainpage.dox` to your INPUT files.
+  Originally this project was designed as a way for me to learn c++ focusing on c++11 features, and also const correctness.
+
+  With this recent rework though I've decided to change the project a bit and focus on c++14, constexpr for compile time computations, and immutable objects for a functional style. I have also decided to integrate a unit testing framework GTest, as well as automated documentation generation by doxygen.
 */
