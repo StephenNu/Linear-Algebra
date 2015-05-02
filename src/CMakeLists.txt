@@ -68,7 +68,6 @@ IF(BUILD_DOCS)
                       MAIN_DEPENDENCY ${doxyfile} ${doxyfile_in}
                       #DEPENDS ${ALL_FILES} ${doxy_extra_files}
                       COMMENT "Generating HTML documentation")
-  file(WRITE ${PROJECT_BINARY_DIR}/hellotest ${ALL_FILES} ${doxy_extra_files})
 
   # TODO: I removed ALL from this, because it was still generating
   # each time make was run even with no changes. If I can figure out why
