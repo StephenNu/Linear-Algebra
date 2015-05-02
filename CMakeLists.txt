@@ -99,6 +99,7 @@ if (BUILD_TESTS)
   enable_testing()
 
 endif(BUILD_TESTS)
+
 # Add my project files
 add_subdirectory(src)
 

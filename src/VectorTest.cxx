@@ -11,6 +11,9 @@
 namespace {
 
   // The fixture for testing class Foo.
+  /**
+    testing vector
+  */
   class VectorTest : public ::testing::Test {
     protected:
       // You can remove any or all of the following functions if its body
@@ -41,6 +44,9 @@ namespace {
   };
 
   // Tests that the Foo::Bar() method does Abc.
+  /**
+    Testing something about a vector
+  */
   TEST_F(VectorTest, something) {
     EXPECT_EQ(0,0);
   }
