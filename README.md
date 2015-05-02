@@ -6,7 +6,9 @@ a project to practice make commands and language.
 
 Building
 ==============
-To build run the following commands in the directory you wish to store the project
+To build run the following commands in the directory you wish to store the project.
+The building of unit tests can be turned on by passing
+-DBUILD\_TESTS=TRUE to the cmake command, or off by -DBUILD\_TESTS=FALSE
 ```
 git clone https://github.com/StephenNu/Linear-Algebra.git
 cd Linear-Algebra
@@ -18,11 +20,24 @@ make
 
 Testing
 ==============
-To make the tests you need to run the 
+To make the tests you need to ensure you ran cmake with build tests on. If you did not then run the following command in the build directory
+```
+cmake ../ -DBUILD_TESTS=TRUE
+```
+Be forewarned this will download and install GTest and GMock for the unit tests usage.
+
+Once cmake has been configured to build the tests and dependencies related to it, run
 ```
 make check
 ```
-command, this will download and install GTest 1.7.0 and GMock 1.7.0 and run them. All test executables will be stored in ./bin
+
+or explicitly
+
+```
+make
+make test
+```
+You can also run each test indivdually in the bin/ directory, all test executables end in \_test.
 
 To-Do
 ==============

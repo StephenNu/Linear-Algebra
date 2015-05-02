@@ -11,16 +11,16 @@
 namespace {
 
   // The fixture for testing class Foo.
-  class FooTest : public ::testing::Test {
+  class MatrixTest : public ::testing::Test {
     protected:
       // You can remove any or all of the following functions if its body
       // is empty.
 
-      FooTest() {
+      MatrixTest() {
         // You can do set-up work for each test here.
       }
 
-      virtual ~FooTest() {
+      virtual ~MatrixTest() {
         // You can do clean-up work that doesn't throw exceptions here.
       }
 
@@ -41,7 +41,7 @@ namespace {
   };
 
   // Tests that the Foo::Bar() method does Abc.
-  TEST_F(FooTest, something) {
+  TEST_F(MatrixTest, something) {
     EXPECT_EQ(0,0);
   }
 } 
